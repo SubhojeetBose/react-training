@@ -3,47 +3,49 @@ import { Text, View, Button } from 'react-native';
 
 const YourApp = () => {
   const [count, setCount] = useState(1);
-  const [timer, setTimer] = useState(0);
+  const [isTimerStop, setIsTimerStop] = useState(true);
+  let timer;
 
   useEffect(() => {
-    if(timer !== 0) {
-      console.log(timer)
+    if(!isTimerStop) {
       let clock = setTimeout(() => setCount(count + 1), 1000);
-      setTimer(clock)
+      this.timer = clock;
     }
-  }, [count, timer]);
+  }, [count, timer, isTimerStop]);
 
   return (
     <View style={{ display: "flex", flexDirection: "column", flex: 1, alignItems: "center", top: 260}}>
       <Text style={{fontSize: 23}}>Counter</Text>
       <Text style={{fontSize: 21}}>{count}</Text>
       <View style={{ display: "flex", flexDirection: "row", marginTop: 200}}>
-        <Button onPress={() => st(count, setCount, timer, setTimer)} title="Start"/>
+        <Button onPress={() => st(count, setCount, isTimerStop, setIsTimerStop)} title="Start"/>
         <View style={{marginLeft: 40}}>
           <Button onPress={() => rt(setCount)} title="Reset"/>
         </View>
         <View style={{marginLeft: 40}}>
-          <Button onPress={() => stp(timer)} title="Stop"/>
+          <Button onPress={() => stp(setIsTimerStop)} title="Stop"/>
         </View>
       </View>
     </View>
   );
 }
 
-const st= (count, setCount, timer, setTimer) => {
-  if(timer === 0) {
-    console.log("insider");
+const st= (count, setCount, isTimerStop, setIsTimerStop) => {
+  if(isTimerStop) {
+    setIsTimerStop(false);
     let clock = setTimeout(() => setCount(count + 1), 1000);
-    setTimer(clock);
+    this.timer = clock;
   }
 }
 
 const rt= (setCount) => {
-  setCount(1)
+  clearTimeout(this.timer);
+  setCount(1);
 }
 
-const stp= (timer) => {
-  clearTimeout(timer)
+const stp= (setIsTimerStop) => {
+  clearTimeout(this.timer);
+  setIsTimerStop(true);
 }
 
 export default YourApp;
